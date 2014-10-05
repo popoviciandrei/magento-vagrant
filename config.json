@@ -1,14 +1,19 @@
 {
   "project": "magento",
 
-  "magento_mirror": "git@github.com:OpenMage/magento-mirror.git"
-  "magento_version": "1.9.0.1",
+  "project_mirror" : "",
+  "project_version" : "*",
 
+  "magento_mirror": "git@github.com:OpenMage/magento-mirror.git",
+  "magento_version": "1.9.0.1",
+  
   "magento_base_url": "http://magento.local/",
+  "magento_host_url": "magento.local",
+  
   "other_config": [
 
   ],
-
+  
   "ssh_host": "",
   "ssh_port": 22,
   "ssh_username": "",
