@@ -185,9 +185,15 @@ def configure():
 @task
 def compass():
     """Compile all compass projects."""
-    with lcd('~'):
-        local('./compass_compile.sh')
+    with lcd(magento_root):
+        configs_rb = string.split(local ('find -L skin/frontend -type f | grep "config.rb" | grep -v "rwd"', capture=True), '\n')
+        for config_rb in configs_rb:
+            compass_dir = local('dirname %s' % config_rb, capture=True);
+            local('compass clean %s' % compass_dir)
+            local('compass compile %s -e "development"' % compass_dir)
 
+
+@task
 def clean_cache():
     """Flush Magento caches."""
     with lcd(magento_root):
