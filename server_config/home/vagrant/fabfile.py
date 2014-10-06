@@ -110,16 +110,29 @@ def get_database_dump():
     This dumps the data and imports it, assuming that the database
     has been created.
     """
+    php = run("which php")
+    gzip = run('which gzip')
+
     db_filename = random_filename('sql')
     db_location = os.path.join(config['tmp_dir'], db_filename)
     with cd(config['magento_root']):
-        run('%s db:dump -f %s --strip="@development"' %
-                (config['magerun'], db_location))
+        run('%s %s db:dump -f %s --strip="@development"' %
+                (php, config['magerun'], db_location))
+
+    """Gzip the sql dump to download it faster"""    
+    run(gzip + " " + db_location)    
+    db_location = db_location + ".gz"
+       
 
     get(remote_path=db_location, local_path='/tmp')
+    run("rm " + db_location);
+
+    gunzip = local('which gunzip', capture=True)
+    local(gunzip + " /tmp/" + db_filename + ".gz")
 
     with lcd(magento_root):
         local('n98-magerun.phar db:import %s' % '/tmp/' + db_filename)
+        local("rm /tmp/" + db_filename)
 
 @task
 def install_dependencies():
