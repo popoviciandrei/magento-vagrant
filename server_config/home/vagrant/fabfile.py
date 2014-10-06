@@ -39,10 +39,20 @@ def clean_up():
 def git_clone():
     """Clone a clean Magento installation into htdocs."""
     with lcd(project_root):
-        local('git clone %s htdocs' %s config['magento_mirror'])
-    with lcd(magento_root):
-        local('git checkout "%s"' % config['magento_version'])
-    local('/bin/rm -rf .git composer.json')
+        """Clone the project"""
+        local('git clone %s .' % config['project_mirror'])
+        if config['project_version'] != "*":
+            local('git checkout "%s"' % config['project_version'])    
+
+        """Clone magento repository"""
+        if len(config['magento_mirror']):
+            local('mkdir %s' % magento_root)    
+            with lcd(magento_root):
+                local('git clone %s .' % config['magento_mirror'])
+                if config['magento_version'] != "*":
+                    local('git checkout "%s"' % config['magento_version'])
+
+
 
 @task
 def get_local_xml():
