@@ -1,13 +1,18 @@
 import hashlib
 import json
 import os
+import os.path
+import re
+import string
 
 from xml.etree import ElementTree
 from fabric.api import local, env, run, get, cd, lcd, task
 
-project_root = '/vagrant'
+config = json.load(open('/vagrant/config.json'))
+
+project_root = os.path.join('/vagrant' ,config['magento_host_url'])
 magento_root = os.path.join(project_root, 'htdocs')
-config = json.load(open(os.path.join(project_root, 'config.json')))
+
 
 env.hosts = [config['ssh_host']]
 env.port = config['ssh_port']
@@ -27,8 +32,8 @@ def random_filename(extension):
 @task
 def clean_up():
     """Remove the project directory to get ready."""
-    local('/bin/rm -rf %s' % magento_root)
-    local('/bin/rm -rf %s/vendor' % project_root)
+    local('rm -rf %s' % project_root)
+    local('mkdir %s' % project_root)
 
 @task
 def git_clone():
