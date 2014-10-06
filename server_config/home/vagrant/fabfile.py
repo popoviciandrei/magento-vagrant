@@ -70,6 +70,27 @@ def get_local_xml():
             local('sed -i \'s/$KEY/%s/g\' local.xml' % secret_key)
             local('sed -i \'s/$DB_NAME/%s/g\' local.xml' % config['magento_host_url'])
 
+@task 
+def create_vhost_conf():
+    """Create magento host file and restart nginx"""
+    host_file = config['magento_host_url'] + ".conf"
+    local('cp magento.conf.template /etc/nginx/conf.d/%s' % host_file)
+    with lcd('/etc/nginx/conf.d'):
+        local('sed -i \'s/$MAGENTO_HOST_URL/%s/g\' %s' % (config['magento_host_url'], host_file))
+        local('sed -i \'s/$MAGENTO_ROOT/%s/g\' %s' % (re.escape(magento_root), host_file))
+    
+    """ Add the project url to the /etc/hosts"""
+    exists = local('grep -iran "%s" /etc/hosts | wc -l' % config['magento_host_url'], capture=True)
+    if exists == "0":
+        local('cp /etc/hosts /tmp/hosts')
+        fl = open('/tmp/hosts','a+');
+        fl.write('127.0.0.1 %s \n' % config['magento_host_url'])
+        fl.close()
+        local('sudo cp /tmp/hosts /etc/hosts && rm /tmp/hosts')
+    
+    """ Restart nginx """
+    local('sudo service nginx restart')
+
 @task
 def get_media_dump():
     """SSH to remote server and get media folder.
@@ -178,6 +199,7 @@ def init():
     clean_up()
     git_clone()
     get_local_xml()
+    create_vhost_conf()
     get_media_dump()
     create_database()
     get_database_dump()
