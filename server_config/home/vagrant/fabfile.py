@@ -86,9 +86,10 @@ def get_media_dump():
     media_filename = random_filename('zip')
     media_location = os.path.join(config['tmp_dir'], media_filename)
 
+    php = run("which php")
     with cd(config['magento_root']):
-        run('%s media:dump --strip %s' %
-                (config['magerun'], media_location))
+        run('%s %s media:dump --strip %s' %
+                (php, config['magerun'], media_location))
 
     get(remote_path=media_location, local_path='/tmp')
 
