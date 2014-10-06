@@ -105,11 +105,21 @@ If configuration needs to be done after installation, the array
 + `get_local_xml`
 
   Copy a local.xml from the base repository into the correct location
-  for Magento. This config file should exist before the project is
-  installed.
+  for Magento. The file name should be local.xml.local.
 
-  We don't generate this from scratch because sometimes other server
-  specific configuration is put into `local.xml`.
+  If no local.xml.local found we use the local.xml.template as a reference 
+  and only update the key, taken from remote server, and the db_name which is the 
+  'magento_host_url' from config file
+
++ `create_vhost_conf`
+  
+  Creates a nginx <magento_host_url>.conf in the /etc/nginx/conf.d folder.
+  This template gets updates with the <magento_host_url> as server name and with 
+  <magento_root>  as server path.
+
+  The task also adds the host file to the /etc/hosts as
+  127.0.0.1 <magento_host_url>
+
 
 + `get_media_dump`
 
@@ -127,6 +137,10 @@ If configuration needs to be done after installation, the array
 
 + `install_dependencies`
 
+  Run `composer.phar install`
+
++ `update_dependencies`
+
   Run `composer.phar update`
 
 + `compass`
@@ -139,7 +153,7 @@ If configuration needs to be done after installation, the array
 
 + `init`
 
-  All of the above, in order.
+  All of the above, in order. (except the `updated_dependencies`)
 
 ## To Do
 
