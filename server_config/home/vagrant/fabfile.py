@@ -136,6 +136,12 @@ def get_database_dump():
 
 @task
 def install_dependencies():
+    """Run composer.phar install."""
+    with lcd(project_root):
+        local('composer.phar install')
+
+@task
+def update_dependencies():
     """Run composer.phar update."""
     with lcd(project_root):
         local('composer.phar update')
