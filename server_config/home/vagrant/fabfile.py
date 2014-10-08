@@ -203,6 +203,7 @@ def init_local():
     create_vhost_conf()
     create_database()
     install_dependencies()
+    compass()
     
 @task
 def init_remote():
@@ -219,3 +220,7 @@ def init_remote():
     compass()
     clean_cache()
 
+ @task get_remote():
+    get_database_dump()
+    configure()
+    get_media_dump()
