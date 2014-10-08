@@ -195,7 +195,19 @@ def clean_cache():
         local('n98-magerun.phar cache:flush')
 
 @task
-def init():
+def init_local():
+    """All together now (!)"""
+    clean_up()
+    git_clone()
+    get_local_xml()
+    create_vhost_conf()
+    create_database()
+    install_dependencies()
+    configure()
+    compass()
+    clean_cache()
+@task
+def init_remote():
     """All together now (!)"""
     clean_up()
     git_clone()
