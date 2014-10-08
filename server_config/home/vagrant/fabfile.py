@@ -10,7 +10,7 @@ from fabric.api import local, env, run, get, cd, lcd, task
 
 config = json.load(open('/vagrant/config.json'))
 
-project_root = os.path.join('/vagrant' ,config['magento_host_url'])
+project_root = os.path.join('/vagrant/projects' ,config['magento_host_url'])
 magento_root = os.path.join(project_root, 'htdocs')
 
 
@@ -33,7 +33,7 @@ def random_filename(extension):
 def clean_up():
     """Remove the project directory to get ready."""
     local('rm -rf %s' % project_root)
-    local('mkdir %s' % project_root)
+    local('mkdir -p %s' % project_root)
 
 @task
 def git_clone():
