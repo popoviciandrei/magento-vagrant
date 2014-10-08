@@ -180,6 +180,12 @@ file { '/home/vagrant/compass_compile.sh':
   mode => '0755',
 }
 
+file { '/home/vagrant/magento.conf.template':
+  ensure => 'present',
+  source => '/vagrant/server_config/home/vagrant/magento.conf.template',
+  mode => '0755',
+}
+
 
 /**
  * Satis repository for Composer
