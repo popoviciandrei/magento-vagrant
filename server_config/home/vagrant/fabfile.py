@@ -61,14 +61,9 @@ def get_local_xml():
     if os.path.isfile('/vagrant/local.xml.local') == True:
         local('cp /vagrant/local.xml.local %s'  % os.path.join(magento_root, 'app/etc/local.xml'))
     else:
-        local('cp local.xml.template %s' % os.path.join(magento_root, 'app/etc/local.xml'))
-
-        with cd(config['magento_root']):
-            secret_key = run('/bin/grep "key" htdocs/app/etc/local.xml | sed \'s/.*\[//\' | sed \'s/\].*//\'')
-
-        with lcd(os.path.join(magento_root, 'app/etc')):
-            local('sed -i \'s/$KEY/%s/g\' local.xml' % secret_key)
-            local('sed -i \'s/$DB_NAME/%s/g\' local.xml' % config['magento_host_url'])
+        with lcd(magento_root):
+            local('n98-magerun.phar local-config:generate 127.0.0.1 root root %s db admin' % config['magento_host_url'])
+        
 
 @task 
 def create_vhost_conf():

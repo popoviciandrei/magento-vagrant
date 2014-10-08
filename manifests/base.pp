@@ -15,6 +15,12 @@ service { 'mysql':
   ensure => 'running',
 }
 
+exec { "set-mysql-password":
+    unless => "mysqladmin -uroot -proot status",
+    path => ["/bin", "/usr/bin"],
+    command => "mysqladmin -uroot password root",
+    require => Service["mysql"],
+  } 
 
 /**
  * PHP
