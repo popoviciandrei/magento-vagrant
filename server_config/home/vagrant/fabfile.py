@@ -203,9 +203,7 @@ def init_local():
     create_vhost_conf()
     create_database()
     install_dependencies()
-    configure()
-    compass()
-    clean_cache()
+    
 @task
 def init_remote():
     """All together now (!)"""
