@@ -196,7 +196,7 @@ def clean_cache():
 
 @task
 def init_local():
-    """All together now (!)"""
+    """Init project localy(!)"""
     clean_up()
     git_clone()
     get_local_xml()
@@ -207,20 +207,14 @@ def init_local():
     
 @task
 def init_remote():
-    """All together now (!)"""
-    clean_up()
-    git_clone()
-    get_local_xml()
-    create_vhost_conf()
-    get_media_dump()
-    create_database()
-    get_database_dump()
-    install_dependencies()
-    configure()
-    compass()
+    """Init project localy & get remote media and db dump files(!)"""
+    init_local()
+    get_remote()
     clean_cache()
 
- @task get_remote():
+@task
+def get_remote():
+    """ Get media and db dump from remote host for existing project(!)"""
     get_database_dump()
     configure()
     get_media_dump()
